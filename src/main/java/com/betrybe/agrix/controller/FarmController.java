@@ -1,0 +1,67 @@
+package com.betrybe.agrix.controller;
+
+import com.betrybe.agrix.dto.FarmCreationDto;
+import com.betrybe.agrix.dto.FarmDto;
+import com.betrybe.agrix.entity.Farm;
+import com.betrybe.agrix.service.FarmService;
+import java.util.List;
+import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * Class Type FarmController.
+ */
+@RestController
+@RequestMapping("/farms")
+public class FarmController {
+
+  private final FarmService farmService;
+
+  @Autowired
+  public FarmController(FarmService farmService) {
+    this.farmService = farmService;
+  }
+
+  /**
+   * Method Create Farm.
+   */
+
+  @PostMapping
+  @ResponseStatus(HttpStatus.CREATED)
+  public FarmDto createFarm(@RequestBody FarmCreationDto farmDto) {
+    return FarmDto.fromEntity(
+            farmService.create(farmDto.toEntity())
+    );
+  }
+
+  /**
+   * Method Get all farms.
+   */
+  @GetMapping
+  public List<FarmDto> getAllFarms() {
+    List<Farm> allFarms = farmService.findAll();
+
+    return allFarms.stream()
+            .map(FarmDto::fromEntity)
+            .toList();
+  }
+
+  /**
+   * Method getFarmById.
+   */
+  @GetMapping("/{id}")
+  public ResponseEntity<Object> getFarmById(@PathVariable Long id) {
+    Optional<FarmDto> farm = farmService.findById(id);
+    return farm.<ResponseEntity<Object>>map(ResponseEntity::ok).orElseGet(
+            () -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("Fazenda não encontrada!"));
+  }
+}
