@@ -32,7 +32,7 @@ public class FarmService {
   }
 
   /**
-   * Get all farms list.
+   * Method Get all farms list.
    */
   public List<Farm> findAll() {
     return farmRepository.findAll();
@@ -46,7 +46,10 @@ public class FarmService {
             .orElseThrow(FarmNotFoundException::new);
   }
 
-  public Crop createCropByFarmId(Long farmId, Crop crop) throws FarmNotFoundException {
+  /**
+   * Method createCropById.
+   */
+  public Crop createCropById(Long farmId, Crop crop) throws FarmNotFoundException {
     Farm farm = findById(farmId);
 
     crop.setFarm(farm);

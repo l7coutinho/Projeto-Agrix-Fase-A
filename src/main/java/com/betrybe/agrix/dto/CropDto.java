@@ -5,7 +5,7 @@ import com.betrybe.agrix.entity.Crop;
 /**
  * Class Type CropDto.
  */
-public record CropDto(Long id, Long farmId,String name, Double plantedArea) {
+public record CropDto(Long id, Long farmId, String name, Double plantedArea) {
   /**
    * Constructor FarmDto.
    */

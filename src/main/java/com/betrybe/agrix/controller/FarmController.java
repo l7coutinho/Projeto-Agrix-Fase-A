@@ -37,7 +37,6 @@ public class FarmController {
   /**
    * Method Create Farm.
    */
-
   @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   public FarmDto createFarm(@RequestBody FarmCreationDto farmDto) {
@@ -68,13 +67,16 @@ public class FarmController {
     );
   }
 
+  /**
+   * Method createCropById.
+   */
   @PostMapping("/{farmId}/crops")
   @ResponseStatus(HttpStatus.CREATED)
-  public CropDto CreateCropById(
+  public CropDto createCropById(
           @PathVariable Long farmId,
           @RequestBody CropCreationDto cropCreationDto) throws FarmNotFoundException {
     return CropDto.fromEntity(
-            farmService.createCropByFarmId(farmId, cropCreationDto.toEntity())
+            farmService.createCropById(farmId, cropCreationDto.toEntity())
     );
   }
 }
