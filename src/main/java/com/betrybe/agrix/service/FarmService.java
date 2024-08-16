@@ -1,10 +1,11 @@
 package com.betrybe.agrix.service;
 
-import com.betrybe.agrix.dto.FarmDto;
+import com.betrybe.agrix.entity.Crop;
 import com.betrybe.agrix.entity.Farm;
+import com.betrybe.agrix.exception.FarmNotFoundException;
+import com.betrybe.agrix.repository.CropRepository;
 import com.betrybe.agrix.repository.FarmRepository;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,10 +15,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class FarmService {
   private final FarmRepository farmRepository;
+  private final CropRepository cropRepository;
 
   @Autowired
-  public FarmService(FarmRepository farmRepository) {
+  public FarmService(FarmRepository farmRepository, CropRepository cropRepository) {
     this.farmRepository = farmRepository;
+    this.cropRepository = cropRepository;
   }
 
   /**
@@ -38,8 +41,16 @@ public class FarmService {
   /**
    * Method findById.
    */
-  public Optional<FarmDto> findById(Long id) {
+  public Farm findById(Long id) throws FarmNotFoundException {
     return farmRepository.findById(id)
-            .map(farm -> new FarmDto(farm.getId(), farm.getName(), farm.getSize()));
+            .orElseThrow(FarmNotFoundException::new);
+  }
+
+  public Crop createCropByFarmId(Long farmId, Crop crop) throws FarmNotFoundException {
+    Farm farm = findById(farmId);
+
+    crop.setFarm(farm);
+
+    return cropRepository.save(crop);
   }
 }

@@ -1,8 +1,11 @@
 package com.betrybe.agrix.controller;
 
+import com.betrybe.agrix.dto.CropCreationDto;
+import com.betrybe.agrix.dto.CropDto;
 import com.betrybe.agrix.dto.FarmCreationDto;
 import com.betrybe.agrix.dto.FarmDto;
 import com.betrybe.agrix.entity.Farm;
+import com.betrybe.agrix.exception.FarmNotFoundException;
 import com.betrybe.agrix.service.FarmService;
 import java.util.List;
 import java.util.Optional;
@@ -59,9 +62,19 @@ public class FarmController {
    * Method getFarmById.
    */
   @GetMapping("/{id}")
-  public ResponseEntity<Object> getFarmById(@PathVariable Long id) {
-    Optional<FarmDto> farm = farmService.findById(id);
-    return farm.<ResponseEntity<Object>>map(ResponseEntity::ok).orElseGet(
-            () -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("Fazenda não encontrada!"));
+  public FarmDto getFarmById(@PathVariable Long id) throws FarmNotFoundException {
+    return FarmDto.fromEntity(
+            farmService.findById(id)
+    );
+  }
+
+  @PostMapping("/{farmId}/crops")
+  @ResponseStatus(HttpStatus.CREATED)
+  public CropDto CreateCropById(
+          @PathVariable Long farmId,
+          @RequestBody CropCreationDto cropCreationDto) throws FarmNotFoundException {
+    return CropDto.fromEntity(
+            farmService.createCropByFarmId(farmId, cropCreationDto.toEntity())
+    );
   }
 }

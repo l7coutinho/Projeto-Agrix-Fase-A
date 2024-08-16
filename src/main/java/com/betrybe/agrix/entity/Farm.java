@@ -1,9 +1,8 @@
 package com.betrybe.agrix.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.List;
 
 /**
  * Class type Farm.
@@ -16,6 +15,9 @@ public class Farm {
 
   private String name;
   private Double size;
+
+  @OneToMany(mappedBy = "farm")
+  private List<Crop> crops;
 
   public Farm() {}
 
