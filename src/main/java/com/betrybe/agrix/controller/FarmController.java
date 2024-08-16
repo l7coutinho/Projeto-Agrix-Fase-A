@@ -4,6 +4,7 @@ import com.betrybe.agrix.dto.CropCreationDto;
 import com.betrybe.agrix.dto.CropDto;
 import com.betrybe.agrix.dto.FarmCreationDto;
 import com.betrybe.agrix.dto.FarmDto;
+import com.betrybe.agrix.entity.Crop;
 import com.betrybe.agrix.entity.Farm;
 import com.betrybe.agrix.exception.FarmNotFoundException;
 import com.betrybe.agrix.service.FarmService;
@@ -78,5 +79,19 @@ public class FarmController {
     return CropDto.fromEntity(
             farmService.createCropById(farmId, cropCreationDto.toEntity())
     );
+  }
+
+  /**
+   * Method createCropById.
+   */
+  @GetMapping("/{farmId}/crops")
+  public List<CropDto> findAllCropsById(
+          @PathVariable Long farmId
+  ) throws FarmNotFoundException {
+    List<Crop> crops = farmService.findAllCropsById(farmId);
+
+    return crops.stream()
+            .map(CropDto::fromEntity)
+            .toList();
   }
 }

@@ -56,4 +56,15 @@ public class FarmService {
 
     return cropRepository.save(crop);
   }
+
+  /**
+   * Method findAllCropsById.
+   */
+  public List<Crop> findAllCropsById(Long farmId) throws FarmNotFoundException {
+    Farm farm = findById(farmId);
+
+    return cropRepository.findAll().stream()
+            .filter(crop -> farmId.equals(crop.getFarm().getId()))
+            .toList();
+  }
 }
